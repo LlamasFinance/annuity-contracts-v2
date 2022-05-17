@@ -1,7 +1,7 @@
 import { network } from "hardhat";
 import { developmentChains, VERIFICATION_BLOCK_CONFIRMATIONS } from "../helper-hardhat-config";
 import { verify } from "../helper-functions";
-import { DeployFunction } from "hardhat-deploy/dist/types";
+import { DeployFunction } from "hardhat-deploy/types";
 
 // arguments come from hardhat-deploy
 const deployFunction: DeployFunction = async ({ getNamedAccounts, deployments }) => {
@@ -11,14 +11,14 @@ const deployFunction: DeployFunction = async ({ getNamedAccounts, deployments })
   const chainId = network.config.chainId;
   if (!chainId) return;
 
-  //   let ethUsdPriceFeedAddress: string | undefined;
+  // let ethUsdPriceFeedAddress: string | undefined;
 
-  //   if (chainId === 31337) {
-  //     const EthUsdAggregator = await deployments.get("MockV3Aggregator");
-  //     ethUsdPriceFeedAddress = EthUsdAggregator.address;
-  //   } else {
-  //     ethUsdPriceFeedAddress = networkConfig[chainId].ethUsdPriceFeed;
-  //   }
+  // if (chainId === 31337) {
+  //   const EthUsdAggregator = await deployments.get("MockV3Aggregator");
+  //   ethUsdPriceFeedAddress = EthUsdAggregator.address;
+  // } else {
+  //   ethUsdPriceFeedAddress = networkConfig[chainId].ethUsdPriceFeed;
+  // }
 
   // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
   // Default one below is ETH/USD contract on Kovan
