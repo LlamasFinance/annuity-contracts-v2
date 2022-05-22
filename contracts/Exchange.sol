@@ -171,6 +171,7 @@ contract Exchange is ReentrancyGuard, Ownable {
     bool success = s_lenderToken.transfer(agreement.lender, futureValue);
     if (!success) revert TransferFailed();
     emit Closed(agreement.lender, agreement.borrower, id);
+    agreement.status = Status.Closed;
   }
 
   function getMinReqCollateral(uint256 id) public view returns (uint256) {
