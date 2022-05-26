@@ -3,6 +3,7 @@
   "error NeedsToBeActive()",
   "error NeedsToBeBorrower()",
   "error NeedsToBeLender()",
+  "error NeedsToBeRepaidOrPending()",
   "error OnlySimulatedBackend()",
   "error TransferFailed()",
   "event Activate(address indexed,uint256 indexed,uint256 indexed)",

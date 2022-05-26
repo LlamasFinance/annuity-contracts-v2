@@ -30,6 +30,8 @@ struct Agreement {
 error TransferFailed();
 error NeedsMoreThanZero();
 error NeedsToBeActive();
+error NeedsToBeRepaid();
+error NeedsToBeRepaidOrPending();
 error NeedsToBeLender();
 error NeedsToBeBorrower();
 
@@ -163,13 +165,20 @@ contract Exchange is ReentrancyGuard, Ownable {
     emit WithdrawCollateral(agreement.borrower, id, amount);
   }
 
-  function close(uint256 id) external nonReentrant onlyIfLender(id) onlyIfRepaid(id) {
+  function close(uint256 id) external nonReentrant onlyIfLender(id) onlyIfRepaidOrPending(id) {
     Agreement storage agreement = s_idToAgreement[id];
-    uint256 futureValue = agreement.futureValue;
-    assert(agreement.repaidAmt == futureValue);
 
-    bool success = s_lenderToken.transfer(agreement.lender, futureValue);
-    if (!success) revert TransferFailed();
+    if (agreement.status == Status.Pending) {
+      bool success = s_lenderToken.transfer(agreement.lender, agreement.deposit);
+      if (!success) revert TransferFailed();
+    } else {
+      uint256 futureValue = agreement.futureValue;
+      assert(agreement.repaidAmt == futureValue);
+
+      bool success = s_lenderToken.transfer(agreement.lender, futureValue);
+      if (!success) revert TransferFailed();
+    }
+
     emit Closed(agreement.lender, agreement.borrower, id);
     agreement.status = Status.Closed;
   }
@@ -221,7 +230,16 @@ contract Exchange is ReentrancyGuard, Ownable {
 
   modifier onlyIfRepaid(uint256 id) {
     if (s_idToAgreement[id].status != Status.Repaid) {
-      revert NeedsToBeActive();
+      revert NeedsToBeRepaid();
+    }
+    _;
+  }
+
+  modifier onlyIfRepaidOrPending(uint256 id) {
+    if (
+      s_idToAgreement[id].status != Status.Repaid && s_idToAgreement[id].status != Status.Pending
+    ) {
+      revert NeedsToBeRepaidOrPending();
     }
     _;
   }

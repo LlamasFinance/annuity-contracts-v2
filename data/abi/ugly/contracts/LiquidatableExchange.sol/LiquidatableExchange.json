@@ -21,6 +21,11 @@
   },
   {
     "inputs": [],
+    "name": "NeedsToBeRepaidOrPending",
+    "type": "error"
+  },
+  {
+    "inputs": [],
     "name": "OnlySimulatedBackend",
     "type": "error"
   },
