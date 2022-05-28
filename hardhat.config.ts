@@ -54,7 +54,7 @@ const config: HardhatUserConfig = {
     },
     mumbai: {
       url: process.env.MUMBAI_URL || "",
-      accounts: process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: process.env.LOCAL_PRIVATE_KEY !== undefined ? [process.env.LOCAL_PRIVATE_KEY] : [],
       saveDeployments: true,
       chainId: 80001,
     },
@@ -87,7 +87,7 @@ const config: HardhatUserConfig = {
     currency: "USD",
   },
   etherscan: {
-    apiKey: process.env.ETHERSCAN_API_KEY,
+    apiKey: process.env.LOCAL_ETHERSCAN_API_KEY,
   },
   abiExporter: [
     {

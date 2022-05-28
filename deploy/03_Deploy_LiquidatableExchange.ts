@@ -42,24 +42,26 @@ const deployFunction: DeployFunction = async ({ getNamedAccounts, deployments })
     args: [],
   });
   const router = await ethers.getContractAt("MockSwapRouter", swapperDeployment.address);
-  router.setPriceFeed(ethUsdPriceFeedAddress!);
+  if (router && ethUsdPriceFeedAddress) {
+    await router.setPriceFeed(ethUsdPriceFeedAddress);
+  }
 
   log(`----------------------------------------------------`);
 
-  const exchangeDeployment = await deploy("LiquidatableExchange", {
-    from: deployer,
-    args: [],
-    log: true,
-    waitConfirmations: waitBlockConfirmations,
-  });
-  const exchange = await ethers.getContractAt("LiquidatableExchange", exchangeDeployment.address);
-  exchange.setLenderToken(usdc.address, ethUsdPriceFeedAddress!);
-  exchange.setSwapRouter(router.address, weth.address);
+  //   const exchangeDeployment = await deploy("LiquidatableExchange", {
+  //     from: deployer,
+  //     args: [],
+  //     log: true,
+  //     waitConfirmations: waitBlockConfirmations,
+  //   });
+  //   const exchange = await ethers.getContractAt("LiquidatableExchange", exchangeDeployment.address);
+  //   await exchange.setLenderToken(usdc.address, ethUsdPriceFeedAddress!);
+  //   await exchange.setSwapRouter(router.address, weth.address);
 
   // Verify the deployment
-  if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+  if (!developmentChains.includes(network.name) && process.env.LOCAL_ETHERSCAN_API_KEY) {
     log("Verifying...");
-    await verify(exchange.address, []);
+    await verify(weth.address, []);
   }
 
   log("----------------------------------------------------");

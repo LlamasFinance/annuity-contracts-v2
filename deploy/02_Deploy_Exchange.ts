@@ -49,14 +49,14 @@ const deployFunction: DeployFunction = async ({ getNamedAccounts, deployments })
   exchange.setLenderToken(usdc.address, ethUsdPriceFeedAddress!);
 
   // Verify the deployment
-  if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+  if (!developmentChains.includes(network.name) && process.env.LOCAL_ETHERSCAN_API_KEY) {
     log("Verifying...");
     await verify(exchange.address, []);
   }
 
   log("----------------------------------------------------");
 };
-
+deployFunction.skip = async (hre) => true;
 export default deployFunction;
 deployFunction.tags = [`all`, `exchange`, `main`];
 // tags can be used with hardhat-deploy and hardhat.config to customize things

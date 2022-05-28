@@ -27,6 +27,6 @@ const deployFunction: DeployFunction = async () => {
     log(`----------------------------------------------------`);
   }
 };
-
+deployFunction.skip = async (hre) => true;
 export default deployFunction;
 deployFunction.tags = [`all`, `mocks`, `main`];

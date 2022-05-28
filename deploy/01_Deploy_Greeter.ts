@@ -11,17 +11,6 @@ const deployFunction: DeployFunction = async ({ getNamedAccounts, deployments })
   const chainId = network.config.chainId;
   if (!chainId) return;
 
-  // let ethUsdPriceFeedAddress: string | undefined;
-
-  // if (chainId === 31337) {
-  //   const EthUsdAggregator = await deployments.get("MockV3Aggregator");
-  //   ethUsdPriceFeedAddress = EthUsdAggregator.address;
-  // } else {
-  //   ethUsdPriceFeedAddress = networkConfig[chainId].ethUsdPriceFeed;
-  // }
-
-  // Price Feed Address, values can be obtained at https://docs.chain.link/docs/reference-contracts
-  // Default one below is ETH/USD contract on Kovan
   const waitBlockConfirmations = developmentChains.includes(network.name)
     ? 1
     : VERIFICATION_BLOCK_CONFIRMATIONS;
@@ -33,17 +22,18 @@ const deployFunction: DeployFunction = async ({ getNamedAccounts, deployments })
     args: [message],
     log: true,
     waitConfirmations: waitBlockConfirmations,
+    skipIfAlreadyDeployed: true,
   });
 
   // Verify the deployment
-  if (!developmentChains.includes(network.name) && process.env.ETHERSCAN_API_KEY) {
+  if (!developmentChains.includes(network.name) && process.env.LOCAL_ETHERSCAN_API_KEY) {
     log("Verifying...");
     await verify(greeter.address, [message]);
   }
 
   log("----------------------------------------------------");
 };
-
+deployFunction.skip = async (hre) => true;
 export default deployFunction;
 deployFunction.tags = [`all`, `greeter`, `main`];
 // tags can be used with hardhat-deploy and hardhat.config to customize things
